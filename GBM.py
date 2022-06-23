@@ -30,12 +30,12 @@ bac = bac.set_index(['Date'])
 ##Classifying 
 ##Training data will be used to estimate mu_hat and sigma^2_hat
 
-training_set = bac.loc['2012-06-01':'2020-06-01'].copy()
+training_set = bac.loc['2012-06-01':'2021-06-01'].copy()
 
 ##Predictive set will be used to compare the GBM agaisnt the true price path
 
 
-predictive_set= bac.loc['2020-06-01':'2020-09-01'].copy()
+predictive_set= bac.loc['2021-06-01':'2021-09-01'].copy()
 
 #calculating the mu_hat and sigma^2_hat
 training_set['Log_Returns'] = np.log(training_set.Price) - np.log(training_set.Price.shift(1))
@@ -86,7 +86,7 @@ plt.ylabel('Price')
 plt.title(
     'Geometric Brownian Motion with Mu = .29, Sigma = .67'
 )
-plt.show()
+""" plt.show() """
 ##getting the final predictions for paths
 final_predictions = S_t.T
 Real_Price = predictive_set['Price'].iat[-1]
@@ -96,11 +96,13 @@ final_prediction_mean_1Year = sum(S_T)/ len(S_T)
 ##Plotting histogram of the predicted price and the actual price
 plt.hist(S_T)
 plt.axvline(Real_Price, color = 'black')
-plt.show()
+""" plt.show() """
 
 
 
 print(final_prediction_mean_1Year,Real_Price)
 
+
+####Need to continue with making the GBM a defined function, with the ability to change the predictive time line and shifting the training data and the predictive set
 
 
