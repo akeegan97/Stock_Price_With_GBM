@@ -84,7 +84,7 @@ plt.plot(time_,predictive_set['Price'],zorder =paths+1 ,color = "black")
 plt.xlabel('Trading Days')
 plt.ylabel('Price')
 plt.title(
-    'Geometric Brownian Motion with Mu = .29, Sigma = .67'
+    'Geometric Brownian Motion with Mu = .05198, Sigma = .39835'
 )
 """ plt.show() """
 ##getting the final predictions for paths
