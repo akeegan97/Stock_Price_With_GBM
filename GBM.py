@@ -21,9 +21,9 @@ bac = pd.DataFrame(
     "Price" : bac['Close']
 }
 )
-
+""" 
 bac['Date'] = pd.to_datetime(bac['Date'])
-
+bac['index'] = bac.index
 bac = bac.set_index(['Date'])
 
 
@@ -33,7 +33,14 @@ bac = bac.set_index(['Date'])
 training_set = bac.loc['2012-06-01':'2021-06-01'].copy()
 
 ##Predictive set will be used to compare the GBM agaisnt the true price path
-
+start = pd.to_datetime('2012-06-01')
+end = pd.to_datetime('2021-06-01')
+a = bac['index'].loc[start]
+b = bac['index'].loc[end]
+c = b+65+1
+t_s = bac.iloc[a:b]
+p_s = bac.iloc[b : c]
+print(p_s)
 
 predictive_set= bac.loc['2021-06-01':'2021-09-01'].copy()
 
@@ -86,7 +93,7 @@ plt.ylabel('Price')
 plt.title(
     'Geometric Brownian Motion with Mu = .05198, Sigma = .39835'
 )
-""" plt.show() """
+plt.show()
 ##getting the final predictions for paths
 final_predictions = S_t.T
 Real_Price = predictive_set['Price'].iat[-1]
@@ -96,13 +103,78 @@ final_prediction_mean_1Year = sum(S_T)/ len(S_T)
 ##Plotting histogram of the predicted price and the actual price
 plt.hist(S_T)
 plt.axvline(Real_Price, color = 'black')
-""" plt.show() """
+plt.show()
 
 
 
-print(final_prediction_mean_1Year,Real_Price)
+print(final_prediction_mean_1Year,Real_Price) """
 
 
-####Need to continue with making the GBM a defined function, with the ability to change the predictive time line and shifting the training data and the predictive set
+###Changed above to be a defined function, next need to add the same necessary functions to return plots of the GBM paths from above 
+###and the histograms of the log returns and predicted prices
+
+def gbm(start, end, steps, path, data, confidence):
+    start = pd.to_datetime(start)
+    end = pd.to_datetime(end)
+    steps = steps
+    paths = path
+    df = pd.DataFrame(data)
+    df['Date'] = pd.to_datetime(df['Date'])
+    df['Index'] = df.index
+    df = df.set_index(['Date'])
+    a = df['Index'].loc[start]
+    b = df['Index'].loc[end]
+    c = b + steps + 1
+
+    t_s = df.iloc[a:b].copy()
+    p_s = df.iloc[b:c].copy()
+
+    t_s['Log_Returns'] = np.log(t_s.Price) - np.log(t_s.Price.shift(1))
+
+    x = len(t_s['Log_Returns'])
+    Mu_hat_D = t_s['Log_Returns'].sum() / x
+    sigma_2_hat_D = t_s['Log_Returns'].std()
+
+    Year = 1
+    delta_T = Year/steps
+
+
+    Mu_hat = Mu_hat_D * steps
+    sigma_2_hat = sigma_2_hat_D * np.sqrt(steps)
+    sigma_hat = np.sqrt(sigma_2_hat)
+
+    S_0 = t_s['Price'].iat[-1]
+
+    S_t = np.exp(
+        (Mu_hat - sigma_2_hat / 2)
+        * delta_T + sigma_hat *
+        np.random.normal(0,np.sqrt(delta_T), size=(paths,steps)).T
+        )
+    S_t = np.vstack(
+        [np.ones(paths),S_t]
+        )
+    S_t = np.round(S_0 * S_t.cumprod(axis=0),2)
+
+    time_x_axis = np.array(
+        p_s.index
+        )
+    
+    final_forecast = S_t.T
+    S_T = [i[-1] for i in final_forecast]
+    forecasted_mean_price = sum(S_T)/len(S_T)
+    S_T = np.array(S_T)
+
+    Real_Price = p_s['Price'].iat[-1]
+
+    return forecasted_mean_price , Real_Price 
+
+
+print(gbm('2022-01-03','2022-02-28',21,1000,bac,90))
+
+
+
+
+
+
 
 
