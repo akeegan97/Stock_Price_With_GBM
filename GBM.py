@@ -169,7 +169,7 @@ def gbm(start, end, steps, path, data, confidence):
     return forecasted_mean_price , Real_Price 
 
 
-print(gbm('2022-01-03','2022-02-28',21,1000,bac,90))
+print(gbm('2018-06-01','2019-04-01',44,1000,bac,90))
 
 
 
