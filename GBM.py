@@ -12,7 +12,8 @@ import scipy as sci
 import matplotlib.pyplot as plt
 
 bac = pd.read_csv(r"C:\Users\Andrew\Desktop\Python_Projects\GBM_GARCH\Data_Sets\BAC.csv")
-
+btc =pd.read_csv(r'C:\Users\Andrew\Desktop\Python_Projects\GBM_GARCH\Data_Sets\BTC_USD.csv')
+omcl = pd.read_csv(r"C:\Users\Andrew\Desktop\Python_Projects\GBM_GARCH\Data_Sets\OMCL.csv")
 ###Cleaning up DataFrame
 
 bac = pd.DataFrame(
@@ -20,6 +21,19 @@ bac = pd.DataFrame(
     "Date" : bac['Date'],
     "Price" : bac['Close']
 }
+)
+
+btc = pd.DataFrame(
+    {
+        "Date" : btc['Date'],
+        'Price' : btc['Close']
+    }
+)
+omcl = pd.DataFrame(
+    {
+        'Date' : omcl['Date'],
+        'Price' : omcl['Close']
+    }
 )
 """ 
 bac['Date'] = pd.to_datetime(bac['Date'])
@@ -116,15 +130,15 @@ print(final_prediction_mean_1Year,Real_Price) """
 def gbm(start, end, steps, path, data, confidence):
     start = pd.to_datetime(start)
     end = pd.to_datetime(end)
-    steps = steps
+    steps = steps+1
     paths = path
     df = pd.DataFrame(data)
     df['Date'] = pd.to_datetime(df['Date'])
     df['Index'] = df.index
     df = df.set_index(['Date'])
-    a = df['Index'].loc[start]
-    b = df['Index'].loc[end]
-    c = b + steps + 1
+    a = df['Index'].loc[start]+1
+    b = df['Index'].loc[end]+1
+    c = b + steps -1
 
     t_s = df.iloc[a:b].copy()
     p_s = df.iloc[b:c].copy()
@@ -166,11 +180,11 @@ def gbm(start, end, steps, path, data, confidence):
 
     Real_Price = p_s['Price'].iat[-1]
 
-    return forecasted_mean_price , Real_Price 
+    return forecasted_mean_price ,S_0, Real_Price 
+    
 
 
-print(gbm('2018-06-01','2019-04-01',44,1000,bac,90))
-
+print(gbm('2022-05-27','2022-06-13',5,1000,omcl,90))
 
 
 
