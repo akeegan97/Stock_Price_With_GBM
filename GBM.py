@@ -207,11 +207,11 @@ def gbm(start, end, steps, path, data):
     
 
 
-print(gbm('2012-06-01','2021-06-01',66,1000,bac))
+print(gbm('2012-06-01','2021-06-01',21,1000,bac))
 
 
 
-
+###begin to try to implement a Hidden Markov Model in order to predict what Financial regime the training set data is in to better estimate mu hat and sigma hat
 
 
 
