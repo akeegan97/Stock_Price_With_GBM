@@ -8,7 +8,8 @@
 ##T = time horizon to predict out to
 import pandas as pd
 import numpy as np
-import scipy as sci
+import scipy as scipy
+from scipy.stats import lognorm
 import matplotlib.pyplot as plt
 
 bac = pd.read_csv(r"C:\Users\Andrew\Desktop\Python_Projects\GBM_GARCH\Data_Sets\BAC.csv")
@@ -127,18 +128,18 @@ print(final_prediction_mean_1Year,Real_Price) """
 ###Changed above to be a defined function, next need to add the same necessary functions to return plots of the GBM paths from above 
 ###and the histograms of the log returns and predicted prices
 
-def gbm(start, end, steps, path, data, confidence):
+def gbm(start, end, steps, path, data):
     start = pd.to_datetime(start)
     end = pd.to_datetime(end)
-    steps = steps+1
+    steps = steps
     paths = path
     df = pd.DataFrame(data)
     df['Date'] = pd.to_datetime(df['Date'])
     df['Index'] = df.index
     df = df.set_index(['Date'])
     a = df['Index'].loc[start]+1
-    b = df['Index'].loc[end]+1
-    c = b + steps -1
+    b = df['Index'].loc[end]
+    c = b + steps +1
 
     t_s = df.iloc[a:b].copy()
     p_s = df.iloc[b:c].copy()
@@ -157,7 +158,7 @@ def gbm(start, end, steps, path, data, confidence):
     sigma_2_hat = sigma_2_hat_D * np.sqrt(steps)
     sigma_hat = np.sqrt(sigma_2_hat)
 
-    S_0 = t_s['Price'].iat[-1]
+    S_0 = p_s['Price'].iat[0]
 
     S_t = np.exp(
         (Mu_hat - sigma_2_hat / 2)
@@ -180,11 +181,33 @@ def gbm(start, end, steps, path, data, confidence):
 
     Real_Price = p_s['Price'].iat[-1]
 
-    return forecasted_mean_price ,S_0, Real_Price 
+    plt.figure(figsize=(14,7))
+    plt.plot(time_x_axis,S_t)
+    plt.plot(time_x_axis,p_s['Price'],zorder = paths +1, color='black')
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.title(
+        'Geometric Brownian Motion with Mu = {} Sigma = {} \n Paths = {}'.format(Mu_hat_D,sigma_hat,paths)
+    )
+    
+
+    plt.figure(figsize=(14,7))
+    
+    plt.hist((S_T),bins=50)
+    
+    plt.axvline(Real_Price, color = 'Black')
+    plt.axvline(forecasted_mean_price, color ='red')
+
+    plt.title(
+        'Histogram of Predicted Prices of {} Paths \n Real Price = Black Line \n Mean predicted price = Red'.format(paths)
+    )
+    plt.show()
+
+    return forecasted_mean_price, Real_Price ,S_0
     
 
 
-print(gbm('2022-05-27','2022-06-13',5,1000,omcl,90))
+print(gbm('2012-06-01','2021-06-01',66,1000,bac))
 
 
 
