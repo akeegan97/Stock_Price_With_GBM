@@ -187,7 +187,7 @@ def gbm(start, end, steps, path, data):
     plt.xlabel('Date')
     plt.ylabel('Price')
     plt.title(
-        'Geometric Brownian Motion with Mu = {} Sigma = {} \n Paths = {}'.format(Mu_hat_D,sigma_hat,paths)
+        'Geometric Brownian Motion with Mu = {} Sigma = {} \n Paths = {}'.format(round(Mu_hat_D,4),round(sigma_hat,4),paths)
     )
     
 
@@ -207,7 +207,7 @@ def gbm(start, end, steps, path, data):
     
 
 
-print(gbm('2012-06-01','2021-06-01',21,1000,bac))
+print(gbm('2012-06-01','2021-06-01',63,1000,bac))
 
 
 
