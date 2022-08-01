@@ -201,13 +201,15 @@ def gbm(start, end, steps, path, data):
     plt.title(
         'Histogram of Predicted Prices of {} Paths \n Real Price = Black Line \n Mean predicted price = Red'.format(paths)
     )
+    plt.xlabel('Price')
+    plt.ylabel('Count of Price')
     plt.show()
 
     return forecasted_mean_price, Real_Price ,S_0
     
 
 
-print(gbm('2012-06-01','2021-06-01',63,1000,bac))
+print(gbm('2012-06-01','2021-06-01',21,1000,bac))
 
 
 
