@@ -161,7 +161,7 @@ def gbm(start, end, steps, path, data):
     S_0 = p_s['Price'].iat[0]
 
     S_t = np.exp(
-        (Mu_hat - sigma_2_hat / 2)
+        (Mu_hat - (sigma_2_hat / 2))
         * delta_T + sigma_hat *
         np.random.normal(0,np.sqrt(delta_T), size=(paths,steps)).T
         )
