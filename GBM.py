@@ -187,7 +187,7 @@ def gbm(start, end, steps, path, data):
     plt.xlabel('Date')
     plt.ylabel('Price')
     plt.title(
-        'Geometric Brownian Motion with Mu = {} Sigma = {} \n Paths = {}'.format(round(Mu_hat_D,4),round(sigma_hat,4),paths)
+        'Geometric Brownian Motion with Mu = {} Sigma = {} \n Paths = {} for Trading Days = {}'.format(round(Mu_hat_D,4),round(sigma_hat,4),paths,steps)
     )
     
 
@@ -199,7 +199,7 @@ def gbm(start, end, steps, path, data):
     plt.axvline(forecasted_mean_price, color ='red')
 
     plt.title(
-        'Histogram of Predicted Prices of {} Paths \n Real Price = Black Line \n Mean predicted price = Red'.format(paths)
+        'Histogram of Predicted Prices of {} for {} Trading Days Paths \n Real Price = Black Line \n Mean predicted price = Red'.format(paths,steps)
     )
     plt.xlabel('Price')
     plt.ylabel('Count of Price')
